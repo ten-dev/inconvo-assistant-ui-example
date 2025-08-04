@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ActionBarPrimitive,
   BranchPickerPrimitive,
@@ -15,15 +17,18 @@ import {
   PencilIcon,
   RefreshCwIcon,
   SendHorizontalIcon,
+  Loader2Icon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
-import { InconvoMarkdownText } from "@/components/assistant-ui/inconvo-markdown-text";
+import { InconvoMessage } from "@/components/inconvo/inconvo-message";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
-import { ToolFallback } from "./tool-fallback";
+import { useInconvoState } from "@/app/InconvoRuntimeProvider";
 
 export const Thread: FC = () => {
+  const { isLoading } = useInconvoState();
+
   return (
     <ThreadPrimitive.Root
       className="bg-background box-border flex h-full flex-col overflow-hidden"
@@ -32,24 +37,35 @@ export const Thread: FC = () => {
       }}
     >
       <ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
-        <ThreadWelcome />
+        {isLoading ? (
+          <div className="flex h-full w-full max-w-[var(--thread-max-width)] flex-col items-center justify-center">
+            <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+            <p className="mt-4 text-sm text-muted-foreground">
+              Loading conversation...
+            </p>
+          </div>
+        ) : (
+          <>
+            <ThreadWelcome />
 
-        <ThreadPrimitive.Messages
-          components={{
-            UserMessage: UserMessage,
-            EditComposer: EditComposer,
-            AssistantMessage: AssistantMessage,
-          }}
-        />
+            <ThreadPrimitive.Messages
+              components={{
+                UserMessage: UserMessage,
+                EditComposer: EditComposer,
+                AssistantMessage: AssistantMessage,
+              }}
+            />
 
-        <ThreadPrimitive.If empty={false}>
-          <div className="min-h-8 flex-grow" />
-        </ThreadPrimitive.If>
+            <ThreadPrimitive.If empty={false}>
+              <div className="min-h-8 flex-grow" />
+            </ThreadPrimitive.If>
 
-        <div className="sticky bottom-0 mt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg bg-inherit pb-4">
-          <ThreadScrollToBottom />
-          <Composer />
-        </div>
+            <div className="sticky bottom-0 mt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-lg bg-inherit pb-4">
+              <ThreadScrollToBottom />
+              <Composer />
+            </div>
+          </>
+        )}
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
   );
@@ -158,7 +174,7 @@ const UserMessage: FC = () => {
       <UserActionBar />
 
       <div className="bg-muted text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words rounded-3xl px-5 py-2.5 col-start-2 row-start-2">
-        <MessagePrimitive.Content />
+        <MessagePrimitive.Content components={{ Text: InconvoMessage }} />
       </div>
 
       <BranchPicker className="col-span-full col-start-1 row-start-3 -mr-1 justify-end" />
@@ -203,9 +219,7 @@ const AssistantMessage: FC = () => {
   return (
     <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4">
       <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
-        <MessagePrimitive.Content
-          components={{ Text: InconvoMarkdownText, tools: { Fallback: ToolFallback } }}
-        />
+        <MessagePrimitive.Content components={{ Text: InconvoMessage }} />
       </div>
 
       <AssistantActionBar />

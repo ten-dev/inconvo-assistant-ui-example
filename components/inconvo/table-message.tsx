@@ -1,23 +1,27 @@
 "use client";
 
+import type { Table as TableType } from "@inconvoai/node/resources/conversations/response";
+
 interface TableMessageProps {
-  table: {
-    head: string[];
-    body: (string | number)[][];
-  };
+  table: TableType;
   message?: string;
 }
 
 export function TableMessage({ table, message }: TableMessageProps) {
-  if (!table?.head || !table?.body || !Array.isArray(table.head) || !Array.isArray(table.body)) {
-    return <div className="text-sm text-muted-foreground">Invalid table data</div>;
+  if (
+    !table?.head ||
+    !table?.body ||
+    !Array.isArray(table.head) ||
+    !Array.isArray(table.body)
+  ) {
+    return (
+      <div className="text-sm text-muted-foreground">Invalid table data</div>
+    );
   }
 
   return (
     <div className="space-y-3">
-      {message && (
-        <p className="text-sm text-muted-foreground">{message}</p>
-      )}
+      {message && <p className="text-sm text-muted-foreground">{message}</p>}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-border rounded-lg border">
           <thead className="bg-muted/50">

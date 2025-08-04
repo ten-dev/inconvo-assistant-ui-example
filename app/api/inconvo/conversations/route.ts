@@ -1,4 +1,4 @@
-import Inconvo from "inconvo";
+import Inconvo from "@inconvoai/node";
 import { NextResponse } from "next/server";
 
 export const runtime = "edge";
@@ -11,31 +11,14 @@ const inconvo = new Inconvo({
 // Create a new conversation
 export async function POST(req: Request) {
   try {
-    const { context } = await req.json();
-
-    // Ensure organisationId is provided
     const conversationContext = {
+      // Server side added context i.e organisationId
       organisationId: 1,
     };
-
-    console.log(
-      "Creating Inconvo conversation with context:",
-      conversationContext
-    );
-
     const conversation = await inconvo.conversations.create({
       context: conversationContext,
     });
-
-    console.log("Inconvo conversation created:", conversation);
-
-    if (!conversation.id) {
-      throw new Error("No conversation ID returned from Inconvo");
-    }
-
-    return NextResponse.json({
-      conversationId: conversation.id,
-    });
+    return NextResponse.json(conversation);
   } catch (error) {
     console.error("Failed to create conversation:", error);
     return NextResponse.json(
@@ -54,34 +37,21 @@ export async function GET(req: Request) {
   const conversationId = searchParams.get("id");
 
   try {
+    // Get specific conversation
     if (conversationId) {
-      // Get specific conversation
       const conversation = await inconvo.conversations.retrieve(conversationId);
       return NextResponse.json(conversation);
-    } else {
-      // List all conversations
+    }
+    // List all conversations
+    else {
       const conversations = await inconvo.conversations.list({
         limit: 50,
+        // Server side adding filter based on context field
         context: {
           organisationId: 1,
         },
       });
-
-      // Transform to match thread list format
-      const threads = conversations.items.map((conv) => ({
-        threadId: conv.id,
-        title: conv.title || "Untitled Conversation",
-        lastMessage:
-          conv.messages && conv.messages.length > 0
-            ? conv.messages[conv.messages.length - 1].message
-            : "",
-        createdAt:
-          conv.messages && conv.messages.length > 0
-            ? new Date().toISOString() // Inconvo doesn't provide timestamps
-            : new Date().toISOString(),
-      }));
-
-      return NextResponse.json({ threads });
+      return NextResponse.json(conversations);
     }
   } catch (error) {
     console.error("Failed to retrieve conversations:", error);
