@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  AssistantRuntimeProvider,
-  ThreadUserMessage,
-} from "@assistant-ui/react";
+import { AssistantRuntimeProvider } from "@assistant-ui/react";
 import { useExternalStoreRuntime } from "@assistant-ui/react";
 import { ExternalStoreAdapter } from "@assistant-ui/react";
 import {
@@ -203,7 +200,7 @@ export function InconvoRuntimeProvider({
   };
 
   const onNew = useCallback(
-    async (message: ThreadUserMessage) => {
+    async (message: any) => {
       setIsRunning(true);
       // Create conversation if needed
       if (!conversationIdRef.current) {
@@ -231,7 +228,7 @@ export function InconvoRuntimeProvider({
 
       const userMessage: InconvoMessage = {
         id: Math.random().toString(36).substring(7),
-        role: message.role,
+        role: "user",
         content: {
           type: "text",
           message: message.content[0].text,
