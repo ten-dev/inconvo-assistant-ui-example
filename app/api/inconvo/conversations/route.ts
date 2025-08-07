@@ -5,7 +5,6 @@ export const runtime = "edge";
 
 const inconvo = new Inconvo({
   apiKey: process.env.INCONVO_API_KEY,
-  baseURL: process.env.INCONVO_API_BASE_URL,
 });
 
 // Create a new conversation

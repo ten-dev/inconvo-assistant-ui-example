@@ -6,7 +6,6 @@ export const maxDuration = 30;
 
 const inconvo = new Inconvo({
   apiKey: process.env.INCONVO_API_KEY,
-  baseURL: process.env.INCONVO_API_BASE_URL,
 });
 
 export async function POST(req: Request) {
