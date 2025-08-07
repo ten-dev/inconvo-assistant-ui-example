@@ -4,10 +4,10 @@ This is an example implementation of [assistant-ui](https://github.com/assistant
 
 ## Getting Started
 
-First, copy `.env.example` to `.env` and add your Inconvo API key:
+First, create a `.env` and file to add your Inconvo API key:
 
 ```bash
-cp .env.example .env
+touch .env
 ```
 
 Then update `.env` with your credentials:
@@ -15,6 +15,12 @@ Then update `.env` with your credentials:
 ```
 INCONVO_API_KEY="your_inconvo_api_key_here"
 INCONVO_API_BASE_URL="https://app.inconvo.ai/api/v1"
+```
+
+Then install dependencies:
+
+```bash
+npm i
 ```
 
 Then, run the development server:
