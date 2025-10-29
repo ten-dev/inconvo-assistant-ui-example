@@ -2,6 +2,8 @@
 
 This is an example implementation of [assistant-ui](https://github.com/assistant-ui/assistant-ui) with [Inconvo](https://inconvo.com) as an external runtime provider.
 
+<img width="3828" height="1924" alt="image" src="https://github.com/user-attachments/assets/ab26c0ed-872b-4fc8-9a48-2bd09736d211" />
+
 ## Getting Started
 
 First, create a `.env` and file to add your Inconvo API key:
