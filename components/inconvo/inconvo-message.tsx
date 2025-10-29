@@ -18,6 +18,10 @@ export const InconvoMessage: FC<InconvoMessageProps> = ({ text, isStreaming = fa
     }
   }, [text]);
 
+  const streamingClassName = isStreaming
+    ? "text-muted-foreground/60 italic text-xs animate-pulse"
+    : "";
+
   // If it's a structured Inconvo message with chart or table
   if (content && typeof content === "object") {
     if (content.type === "chart" && content.chart) {
@@ -30,7 +34,7 @@ export const InconvoMessage: FC<InconvoMessageProps> = ({ text, isStreaming = fa
 
     if (content.type === "text" && content.message) {
       return (
-        <span className={isStreaming ? "text-muted-foreground/60 italic text-xs animate-pulse" : ""}>
+        <span className={streamingClassName}>
           {content.message}
         </span>
       );
@@ -38,5 +42,5 @@ export const InconvoMessage: FC<InconvoMessageProps> = ({ text, isStreaming = fa
   }
 
   // Otherwise render as plain text (the default assistant-ui handling will take care of markdown)
-  return <span className={isStreaming ? "text-muted-foreground/60 italic text-xs animate-pulse" : ""}>{text}</span>;
+  return <span className={streamingClassName}>{text}</span>;
 };
