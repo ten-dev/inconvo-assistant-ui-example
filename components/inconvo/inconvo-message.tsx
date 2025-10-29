@@ -9,7 +9,10 @@ interface InconvoMessageProps {
   isStreaming?: boolean;
 }
 
-export const InconvoMessage: FC<InconvoMessageProps> = ({ text, isStreaming = false }) => {
+export const InconvoMessage: FC<InconvoMessageProps> = ({
+  text,
+  isStreaming = false,
+}) => {
   const content = useMemo(() => {
     try {
       return JSON.parse(text);
@@ -33,11 +36,7 @@ export const InconvoMessage: FC<InconvoMessageProps> = ({ text, isStreaming = fa
     }
 
     if (content.type === "text" && content.message) {
-      return (
-        <span className={streamingClassName}>
-          {content.message}
-        </span>
-      );
+      return <span className={streamingClassName}>{content.message}</span>;
     }
   }
 
