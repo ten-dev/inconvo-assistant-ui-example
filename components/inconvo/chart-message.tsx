@@ -11,16 +11,19 @@ interface ChartMessageProps {
 }
 
 export function ChartMessage({ chart, message }: ChartMessageProps) {
-  // Convert data array to object format for React-Chartkick
-  const chartData =
-    chart?.data?.reduce((acc, item) => {
-      if (item.label && item.value !== undefined) {
-        acc[item.label] = item.value;
-      }
+  const chartData = chart?.data?.datasets?.map((dataset) => {
+    const data = chart.data.labels.reduce((acc, label, index) => {
+      acc[label] = dataset.values[index] ?? 0;
       return acc;
-    }, {} as Record<string, number>) || {};
+    }, {} as Record<string, number>);
 
-  const hasData = chart?.type && Object.keys(chartData).length > 0;
+    return {
+      name: dataset.name,
+      data,
+    };
+  }) || [];
+
+  const hasData = chart?.type && chartData.length > 0 && chart.data?.labels?.length > 0;
 
   return (
     <div className="space-y-3">
