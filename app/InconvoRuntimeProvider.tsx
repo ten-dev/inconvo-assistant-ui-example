@@ -162,7 +162,7 @@ export function InconvoRuntimeProvider({
           if (line.trim()) {
             try {
               const event = JSON.parse(line);
-              if (event.type === "response.agent_step" && event.message) {
+              if (event.type === "response.progress" && event.message) {
                 setMessages((prev) =>
                   prev.map((msg) =>
                     msg.id === assistantMessageId
@@ -240,7 +240,7 @@ export function InconvoRuntimeProvider({
         role: "assistant",
         content: {
           type: "text",
-          message: "Loading...",
+          message: "Thinking...",
         },
       };
       setMessages((prev) => [...prev, userMessage, assistantMessage]);

@@ -6,9 +6,10 @@ import { TableMessage } from "./table-message";
 
 interface InconvoMessageProps {
   text: string;
+  isStreaming?: boolean;
 }
 
-export const InconvoMessage: FC<InconvoMessageProps> = ({ text }) => {
+export const InconvoMessage: FC<InconvoMessageProps> = ({ text, isStreaming = false }) => {
   const content = useMemo(() => {
     try {
       return JSON.parse(text);
@@ -28,10 +29,14 @@ export const InconvoMessage: FC<InconvoMessageProps> = ({ text }) => {
     }
 
     if (content.type === "text" && content.message) {
-      return <>{content.message}</>;
+      return (
+        <span className={isStreaming ? "text-muted-foreground/60 italic text-xs animate-pulse" : ""}>
+          {content.message}
+        </span>
+      );
     }
   }
 
   // Otherwise render as plain text (the default assistant-ui handling will take care of markdown)
-  return <>{text}</>;
+  return <span className={isStreaming ? "text-muted-foreground/60 italic text-xs animate-pulse" : ""}>{text}</span>;
 };

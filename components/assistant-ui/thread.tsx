@@ -6,6 +6,7 @@ import {
   ComposerPrimitive,
   MessagePrimitive,
   ThreadPrimitive,
+  useMessage,
 } from "@assistant-ui/react";
 import type { FC } from "react";
 import {
@@ -25,6 +26,16 @@ import { Button } from "@/components/ui/button";
 import { InconvoMessage } from "@/components/inconvo/inconvo-message";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { useInconvoState } from "@/app/InconvoRuntimeProvider";
+
+// Wrapper component to pass streaming state to InconvoMessage
+const InconvoMessageWithStreaming: FC<{ text: string }> = ({ text }) => {
+  const message = useMessage();
+  // Check if this specific message is still being streamed (not yet complete)
+  // Status can be: "complete", "incomplete", "requires-action"
+  const isStreaming = message.status?.type === "incomplete";
+
+  return <InconvoMessage text={text} isStreaming={isStreaming} />;
+};
 
 export const Thread: FC = () => {
   const { isLoading } = useInconvoState();
@@ -218,8 +229,12 @@ const EditComposer: FC = () => {
 const AssistantMessage: FC = () => {
   return (
     <MessagePrimitive.Root className="grid grid-cols-[auto_auto_1fr] grid-rows-[auto_1fr] relative w-full max-w-[var(--thread-max-width)] py-4">
+      <ThreadPrimitive.If running>
+        <Loader2Icon className="col-start-1 row-start-1 h-5 w-5 animate-spin text-muted-foreground/60 mt-2 mr-3" />
+      </ThreadPrimitive.If>
+
       <div className="text-foreground max-w-[calc(var(--thread-max-width)*0.8)] break-words leading-7 col-span-2 col-start-2 row-start-1 my-1.5">
-        <MessagePrimitive.Content components={{ Text: InconvoMessage }} />
+        <MessagePrimitive.Content components={{ Text: InconvoMessageWithStreaming }} />
       </div>
 
       <AssistantActionBar />
@@ -247,11 +262,6 @@ const AssistantActionBar: FC = () => {
           </MessagePrimitive.If>
         </TooltipIconButton>
       </ActionBarPrimitive.Copy>
-      <ActionBarPrimitive.Reload asChild>
-        <TooltipIconButton tooltip="Refresh">
-          <RefreshCwIcon />
-        </TooltipIconButton>
-      </ActionBarPrimitive.Reload>
     </ActionBarPrimitive.Root>
   );
 };
