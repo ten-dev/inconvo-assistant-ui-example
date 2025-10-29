@@ -12,10 +12,10 @@ interface ChartMessageProps {
 
 export function ChartMessage({ chart, message }: ChartMessageProps) {
   const chartData = chart?.data?.datasets?.map((dataset) => {
-    const data = chart.data.labels.reduce((acc, label, index) => {
+    const data = chart?.data?.labels?.reduce((acc, label, index) => {
       acc[label] = dataset.values[index] ?? 0;
       return acc;
-    }, {} as Record<string, number>);
+    }, {} as Record<string, number>) ?? {};
 
     return {
       name: dataset.name,
