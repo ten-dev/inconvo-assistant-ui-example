@@ -14,7 +14,7 @@
     "@assistant-ui/react-ai-sdk": "^0.10.9",
     "@assistant-ui/react-markdown": "^0.10.3",
     "@assistant-ui/react-ui": "^0.1.8",
-    "@inconvoai/node": "^0.1.0-alpha.10",
+    "@inconvoai/node": "^0.1.0-alpha.28",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
